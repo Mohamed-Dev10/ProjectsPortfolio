@@ -94,10 +94,9 @@ namespace DemoLibrary.Controllers
                     int newObjectId = latestObjectId + 1;
 
 
-                    // Create the directory path using the newObjectId
-                     var directoryPath = Path.Combine(@"D:\Portfolio Projects\DemoLib\FrontEnd\FrontEnd\LibraryBooks\LibraryBooks\src\assets\imgPublished", newObjectId.ToString());
-                    //var directoryPath = Path.Combine(@"G:\Portfolio Projects\DemoLib\FrontEnd\FrontEnd\LibraryBooks\LibraryBooks\src\assets\imgPublished", newObjectId.ToString());
-
+                  
+                     var directoryPath = Path.Combine(@"C:\Users\Geomatic PC1\Documents\GitHub\FrontEnd BooksLibrary\src\assets\imgPublished", newObjectId.ToString());
+                   
                     if (!Directory.Exists(directoryPath))
                     {
                         Directory.CreateDirectory(directoryPath);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DemoLibrary.Models.Repository
 {
@@ -9,7 +6,7 @@ namespace DemoLibrary.Models.Repository
     {
 
         public IList<TEntity> list();
-      public TEntity Find(int id);
+        public TEntity Find(int id);
         public void Add(TEntity entity);
         public void Edit(int id, TEntity entity);
         public void Delete(int OBJECTID);

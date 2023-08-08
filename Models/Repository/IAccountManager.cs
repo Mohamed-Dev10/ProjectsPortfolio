@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DemoLibrary.Models.Repository
 {
-   public interface IAccountManager
+    public interface IAccountManager
     {
 
         // public async Task Signup(SignUpModel signUpModel);

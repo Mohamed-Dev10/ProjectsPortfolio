@@ -1,21 +1,21 @@
-﻿using System;
+﻿using DemoLibrary.Models;
+using DemoLibrary.Models.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using DemoLibrary.Models;
-using DemoLibrary.Models.Repository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DemoLibrary.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]   
+    [ApiController]
     public class BookApiController : ControllerBase
     {
         private readonly DemoBooksDbContext connectionToDba;
@@ -26,7 +26,9 @@ namespace DemoLibrary.Controllers
 
         private readonly IBookLibrary<Book> Ibook;
 
-        public BookApiController(DemoBooksDbContext connectionToDba,IHttpContextAccessor httpContext, IBookLibrary<Book> bookLirary, IBookLibrary<Author> Iauthor, IHostingEnvironment _hosting)
+#pragma warning disable CS0618 // 'IHostingEnvironment' est obsolète : 'This type is obsolete and will be removed in a future version. The recommended alternative is Microsoft.AspNetCore.Hosting.IWebHostEnvironment.'
+        public BookApiController(DemoBooksDbContext connectionToDba, IHttpContextAccessor httpContext, IBookLibrary<Book> bookLirary, IBookLibrary<Author> Iauthor, IHostingEnvironment _hosting)
+#pragma warning restore CS0618 // 'IHostingEnvironment' est obsolète : 'This type is obsolete and will be removed in a future version. The recommended alternative is Microsoft.AspNetCore.Hosting.IWebHostEnvironment.'
         {
 
             this.connectionToDba = connectionToDba;
@@ -40,7 +42,7 @@ namespace DemoLibrary.Controllers
         //   private readonly IBookLibrary<Author> Iauthor;
         // GET: api/<BookApiController>
         [HttpGet("GetAllBooks")]
-        
+
         public IList<Book> Get()
         {
             var books = Ibook.list().ToList();
@@ -55,7 +57,7 @@ namespace DemoLibrary.Controllers
         }
 
         // POST api/<BookApiController>
-       
+
         [Consumes("multipart/form-data")]
         [HttpPost("AddBook")]
         public async Task<IActionResult> AddBook([FromForm] Book bookDto, [FromHeader] int auth)
@@ -76,27 +78,28 @@ namespace DemoLibrary.Controllers
 
 
                 // Save the file to disk
-                if (HttpContext.Request.Form.Files.Count > 0) {
-                   // string folder = "PublishedBooks/bookImg";
+                if (HttpContext.Request.Form.Files.Count > 0)
+                {
+                    // string folder = "PublishedBooks/bookImg";
                     //string fileName = bookDto.imgBook.FileName;
                     //string filePath = Path.Combine(folder, fileName);
                     //bookDto.fileUrl = filePath;
                     var fileUploaded = HttpContext.Request.Form.Files[0];
                     //await bookDto.imgBook.CopyToAsync(new FileStream(filePath, FileMode.Create));
-                    var baseUrl = httpContextAccessor.HttpContext.Request.Scheme+"://"+httpContextAccessor.HttpContext.Request.Host+ httpContextAccessor.HttpContext.Request.PathBase;
+                    var baseUrl = httpContextAccessor.HttpContext.Request.Scheme + "://" + httpContextAccessor.HttpContext.Request.Host + httpContextAccessor.HttpContext.Request.PathBase;
                     //    var filePath = Path.Combine(hosting.WebRootPath, "UploadsBooks", fileUploaded.FileName);
                     // var filePath = @"G:\Portfolio Projects\DemoLib\FrontEnd\FrontEnd\LibraryBooks\LibraryBooks\src\assets\imgPublished\" + fileUploaded.FileName;
                     // Retrieve the latest OBJECTID from the database
                     int latestObjectId = Ibook.GetLatestObjectId();
-                    
+
 
                     // Increment the latestObjectId by 1
                     int newObjectId = latestObjectId + 1;
 
 
-                  
-                     var directoryPath = Path.Combine(@"C:\Users\Geomatic PC1\Documents\GitHub\FrontEnd BooksLibrary\src\assets\imgPublished", newObjectId.ToString());
-                   
+                    // Create the directory path using the newObjectId
+                    var directoryPath = Path.Combine(@"C:\Users\Geomatic PC1\Documents\GitHub\FrontEnd BooksLibrary\src\assets\imgPublished", newObjectId.ToString());
+
                     if (!Directory.Exists(directoryPath))
                     {
                         Directory.CreateDirectory(directoryPath);
@@ -151,7 +154,7 @@ namespace DemoLibrary.Controllers
                 {
                     BookDba.DescriptionBook = bookDto.DescriptionBook;
                 }
-                if (bookDto.author!=null)
+                if (bookDto.author != null)
                 {
                     BookDba.author = bookDto.author;
                 }

@@ -6,26 +6,26 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DemoLibrary.Models.Repository
 {
-    public class ImplAccountManager:IAccountManager
+    public class ImplAccountManager : IAccountManager
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuation;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ImplAccountManager(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuation,IHttpContextAccessor httpContextAccessor) {
+        public ImplAccountManager(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuation, IHttpContextAccessor httpContextAccessor)
+        {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuation = configuation;
-            _httpContextAccessor= httpContextAccessor;
-    }
+            _httpContextAccessor = httpContextAccessor;
+        }
 
         public async Task<IdentityResult> SignUp(SignUpModel signUpModel)
         {
@@ -45,12 +45,13 @@ namespace DemoLibrary.Models.Repository
         public async Task<string> AsyncSignIn(SigninModel signinModel)
         {
             var result = await _signInManager.PasswordSignInAsync(signinModel.Email, signinModel.Password, false, false);
-            
 
-            if (!result.Succeeded){
+
+            if (!result.Succeeded)
+            {
 
                 return "";
-                }
+            }
             var authClaim = new List<Claim> {
             new Claim(ClaimTypes.Name,signinModel.Email),
             new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
@@ -62,8 +63,8 @@ namespace DemoLibrary.Models.Repository
                 issuer: _configuation["JWT:ValidIssuer"],
                 audience: _configuation["JWT:ValidAudience"],
                 expires: DateTime.Now.AddDays(1),
-                claims:authClaim,
-                signingCredentials:new SigningCredentials(authSigInKey,SecurityAlgorithms.HmacSha256Signature)
+                claims: authClaim,
+                signingCredentials: new SigningCredentials(authSigInKey, SecurityAlgorithms.HmacSha256Signature)
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);

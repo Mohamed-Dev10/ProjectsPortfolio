@@ -9,11 +9,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DemoLibrary.Migrations
 {
+#pragma warning disable CS0579 // Attribut 'DbContext' en double
     [DbContext(typeof(DemoBooksDbContext))]
+#pragma warning restore CS0579 // Attribut 'DbContext' en double
+#pragma warning disable CS0579 // Attribut 'Migration' en double
     [Migration("20230806003256_Migrations")]
+#pragma warning restore CS0579 // Attribut 'Migration' en double
     partial class Migrations
     {
+#pragma warning disable CS0111 // Le type 'Migrations' définit déjà un membre appelé 'BuildTargetModel' avec les mêmes types de paramètre
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
+#pragma warning restore CS0111 // Le type 'Migrations' définit déjà un membre appelé 'BuildTargetModel' avec les mêmes types de paramètre
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DemoLibrary.Models.Repository
 {
-    public class AuthorDbRepository: IBookLibrary<Author>
+    public class AuthorDbRepository : IBookLibrary<Author>
     {
         DemoBooksDbContext ConnectionToDba;
 

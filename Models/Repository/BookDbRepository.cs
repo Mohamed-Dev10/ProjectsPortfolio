@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DemoLibrary.Models;
+﻿using DemoLibrary.Models;
 using DemoLibrary.Models.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BooksLibrary.Models.Repository
 {
@@ -14,7 +12,7 @@ namespace BooksLibrary.Models.Repository
         DemoBooksDbContext ConnectionToDba;
 
 
-      
+
 
         public BookDbRepository(DemoBooksDbContext ConnectionToDba)
         {
@@ -26,20 +24,20 @@ namespace BooksLibrary.Models.Repository
         public int GetLatestObjectId()
         {
             // Assuming you have a database context or repository to work with
-           
-                // Retrieve the latest OBJECTID from the database
-                var latestBook = ConnectionToDba.books
-                    .OrderByDescending(b => b.OBJECTID)
-                    .FirstOrDefault();
 
-                if (latestBook != null)
-                {
-                    return latestBook.OBJECTID;
-                }
+            // Retrieve the latest OBJECTID from the database
+            var latestBook = ConnectionToDba.books
+                .OrderByDescending(b => b.OBJECTID)
+                .FirstOrDefault();
 
-                // If no books exist, return a default value or handle the scenario accordingly
-                return 0;
-          
+            if (latestBook != null)
+            {
+                return latestBook.OBJECTID;
+            }
+
+            // If no books exist, return a default value or handle the scenario accordingly
+            return 0;
+
         }
 
 
@@ -84,6 +82,6 @@ namespace BooksLibrary.Models.Repository
             return ConnectionToDba.books.ToList();
         }
 
-      
+
     }
 }

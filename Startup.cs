@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BooksLibrary.Models.Repository;
 using DemoLibrary.Models;
 using DemoLibrary.Models.Repository;
@@ -10,19 +5,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DemoLibrary
 {
     public class Startup
     {
-        
+
         public Startup(IConfiguration configuration)
         {
             this.configuration = configuration;
@@ -44,7 +39,7 @@ namespace DemoLibrary
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                option.DefaultScheme= JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 
 
             }).AddJwtBearer(option =>
@@ -60,9 +55,9 @@ namespace DemoLibrary
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
 
                     };
-                
+
                 }
-            
+
             );
             services.Configure<FormOptions>(options =>
             {

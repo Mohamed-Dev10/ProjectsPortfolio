@@ -1,11 +1,13 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 namespace DemoLibrary.Migrations
 {
     public partial class Migrations : Migration
     {
+#pragma warning disable CS0111 // Le type 'Migrations' définit déjà un membre appelé 'Up' avec les mêmes types de paramètre
         protected override void Up(MigrationBuilder migrationBuilder)
+#pragma warning restore CS0111 // Le type 'Migrations' définit déjà un membre appelé 'Up' avec les mêmes types de paramètre
         {
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
@@ -235,7 +237,9 @@ namespace DemoLibrary.Migrations
                 column: "authorOBJECTID");
         }
 
+#pragma warning disable CS0111 // Le type 'Migrations' définit déjà un membre appelé 'Down' avec les mêmes types de paramètre
         protected override void Down(MigrationBuilder migrationBuilder)
+#pragma warning restore CS0111 // Le type 'Migrations' définit déjà un membre appelé 'Down' avec les mêmes types de paramètre
         {
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");

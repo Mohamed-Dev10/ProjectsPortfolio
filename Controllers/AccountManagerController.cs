@@ -1,10 +1,7 @@
 ﻿using DemoLibrary.Models;
 using DemoLibrary.Models.Repository;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -21,7 +18,8 @@ namespace DemoLibrary.Controllers
         private readonly IAccountManager accountManager;
         private readonly DemoBooksDbContext connectionToDba;
 
-        public AccountManagerController(IAccountManager accountManager, DemoBooksDbContext connectionToDba) {
+        public AccountManagerController(IAccountManager accountManager, DemoBooksDbContext connectionToDba)
+        {
 
             this.accountManager = accountManager;
             this.connectionToDba = connectionToDba;
@@ -47,24 +45,24 @@ namespace DemoLibrary.Controllers
 
             var result = await accountManager.AsyncSignIn(signinModel);
 
-           
+
             //if (string.IsNullOrEmpty(result))
             //{
             //    return Unauthorized();
             //}
 
             var user = await accountManager.FindUserByEmail(signinModel.Email);
-           
-                var response = new
-                {
-                    userlogged = user.UserName,
-                    tokensessionlogged = result,
-                    firstname=user.FirstName,
-                    lastname = user.LastName,
-                    email=user.Email    
-                };
-       
-           
+
+            var response = new
+            {
+                userlogged = user.UserName,
+                tokensessionlogged = result,
+                firstname = user.FirstName,
+                lastname = user.LastName,
+                email = user.Email
+            };
+
+
             return Ok(response);
         }
 

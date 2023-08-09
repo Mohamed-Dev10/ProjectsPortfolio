@@ -85,6 +85,7 @@ namespace DemoLibrary.Controllers
                     //string filePath = Path.Combine(folder, fileName);
                     //bookDto.fileUrl = filePath;
                     var fileUploaded = HttpContext.Request.Form.Files[0];
+                    var fileUploadedImg = HttpContext.Request.Form.Files[1];
                     //await bookDto.imgBook.CopyToAsync(new FileStream(filePath, FileMode.Create));
                     var baseUrl = httpContextAccessor.HttpContext.Request.Scheme + "://" + httpContextAccessor.HttpContext.Request.Host + httpContextAccessor.HttpContext.Request.PathBase;
                     //    var filePath = Path.Combine(hosting.WebRootPath, "UploadsBooks", fileUploaded.FileName);
@@ -99,18 +100,23 @@ namespace DemoLibrary.Controllers
 
                     // Create the directory path using the newObjectId
                     var directoryPath = Path.Combine(@"C:\Users\Geomatic PC1\Documents\GitHub\FrontEnd BooksLibrary\src\assets\imgPublished", newObjectId.ToString());
+                    var directoryPathImg = Path.Combine(@"C:\Users\Geomatic PC1\Documents\GitHub\FrontEnd BooksLibrary\src\assets\BooksCover", newObjectId.ToString());
 
-                    if (!Directory.Exists(directoryPath))
+                    if (!Directory.Exists(directoryPath) && !Directory.Exists(directoryPathImg))
                     {
                         Directory.CreateDirectory(directoryPath);
+                        Directory.CreateDirectory(directoryPathImg);
                     }
 
                     var filePath = Path.Combine(directoryPath, fileUploaded.FileName);
+                    var filePathImg = Path.Combine(directoryPathImg, fileUploadedImg.FileName);
 
                     bookDto.fileUrl = filePath;
+                    bookDto.ImgUrl = filePathImg;
 
 
                     await bookDto.imgBook.CopyToAsync(new FileStream(filePath, FileMode.Create));
+                    await bookDto.PictureBook.CopyToAsync(new FileStream(filePathImg, FileMode.Create));
 
 
                 }
@@ -120,6 +126,7 @@ namespace DemoLibrary.Controllers
                     TitleBook = bookDto.TitleBook,
                     DescriptionBook = bookDto.DescriptionBook,
                     fileUrl = bookDto.fileUrl,
+                    ImgUrl = bookDto.ImgUrl,
                     author = authorObject
                 };
 

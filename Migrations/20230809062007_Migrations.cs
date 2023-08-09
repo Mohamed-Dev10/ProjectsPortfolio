@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DemoLibrary.Migrations
 {
@@ -176,7 +176,7 @@ namespace DemoLibrary.Migrations
                     TitleBook = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DescriptionBook = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     fileUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    //ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     authorOBJECTID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoLibrary.Migrations
 {
     [DbContext(typeof(DemoBooksDbContext))]
-    [Migration("20230701185723_Migrations")]
+    [Migration("20230809062007_Migrations")]
     partial class Migrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,9 @@ namespace DemoLibrary.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("DescriptionBook")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImgUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TitleBook")

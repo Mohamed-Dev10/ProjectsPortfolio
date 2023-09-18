@@ -12,6 +12,8 @@ namespace DemoLibrary.Models.Repository
         Task<User> FindUserByEmail(string email);
         Task SignOutAsync();
         Task<string> GetTokenAsync(string tokenAccess);
+
+        Task<string> GenerateJwtTokenAsync(SigninModel signinModel);
     }
 
 }

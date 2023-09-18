@@ -2,6 +2,7 @@
 using DemoLibrary.Models.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -28,14 +29,20 @@ namespace DemoLibrary.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> SignUpAccount([FromBody] SignUpModel signUpModel)
         {
+
             var result = await accountManager.SignUp(signUpModel);
 
             if (result.Succeeded)
             {
-                return Ok(result.Succeeded);
+                return Ok(new { Message = "User created successfully" });
             }
-            return Unauthorized();
+
+            var errors = result.Errors.Select(e => e.Description).ToList();
+            return BadRequest(new { Errors = errors });
         }
+
+
+
 
         //works
         [HttpPost("signin")]
@@ -43,7 +50,8 @@ namespace DemoLibrary.Controllers
         {
 
 
-            var result = await accountManager.AsyncSignIn(signinModel);
+            // var result = await accountManager.AsyncSignIn(signinModel);
+
 
 
             //if (string.IsNullOrEmpty(result))
@@ -51,19 +59,32 @@ namespace DemoLibrary.Controllers
             //    return Unauthorized();
             //}
 
-            var user = await accountManager.FindUserByEmail(signinModel.Email);
+            //var user = await accountManager.FindUserByEmail(signinModel.Email);
 
-            var response = new
+            //var response = new
+            //{
+            //    userlogged = user.UserName,
+            //    tokensessionlogged = result,
+            //    firstname = user.FirstName,
+            //    lastname = user.LastName,
+            //    email = user.Email
+            //};
+
+
+            var user = await accountManager.FindUserByEmail(signinModel.Email);
+            var token = await accountManager.GenerateJwtTokenAsync(signinModel);
+
+
+            return Ok(new
             {
                 userlogged = user.UserName,
-                tokensessionlogged = result,
+                tokensessionlogged = token,
                 firstname = user.FirstName,
                 lastname = user.LastName,
                 email = user.Email
-            };
+            });
 
-
-            return Ok(response);
+           
         }
 
 

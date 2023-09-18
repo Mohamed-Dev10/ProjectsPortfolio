@@ -44,16 +44,17 @@ namespace DemoLibrary
 
             }).AddJwtBearer(option =>
                 {
-                    option.SaveToken = true;
-                    option.RequireHttpsMetadata = false;
-                    option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    //option.SaveToken = true;
+                    //option.RequireHttpsMetadata = false;
+                    option.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidAudience = configuration["JWT:ValidAudience"],
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
                         ValidIssuer = configuration["JWT:ValidIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-
+                        ValidAudience = configuration["JWT:ValidAudience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JWT:Secret"]))
                     };
 
                 }

@@ -51,7 +51,9 @@ namespace DemoLibrary.Models.Repository
             {
 
                 return "";
+
             }
+
             var authClaim = new List<Claim> {
             new Claim(ClaimTypes.Name,signinModel.Email),
             new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
@@ -88,5 +90,29 @@ namespace DemoLibrary.Models.Repository
             return token;
         }
 
+        public async Task<string> GenerateJwtTokenAsync(SigninModel signinModel)
+        {
+            var claims = new List<Claim>
+    {
+        // The username or identifier for the user
+        new Claim(ClaimTypes.Email, signinModel.Email),   // The email address of the user
+        // Add other claims as needed
+    };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuation["JWT:Secret"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuation["JWT:ValidIssuer"],
+                audience: _configuation["JWT:ValidAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30), // Set the token expiration as needed
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+       
     }
 }

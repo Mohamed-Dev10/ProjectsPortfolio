@@ -41,8 +41,8 @@ namespace DemoLibrary.Controllers
 
         //   private readonly IBookLibrary<Author> Iauthor;
         // GET: api/<BookApiController>
-        [HttpGet("GetAllBooks")]
 
+        [HttpGet("GetAllBooks")]
         public IList<Book> Get()
         {
             var books = Ibook.list().ToList();
@@ -50,10 +50,20 @@ namespace DemoLibrary.Controllers
         }
 
         // GET api/<BookApiController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("GetBookById/{objectid}")]
+        public IActionResult GetBookById(int objectid)
         {
-            return "value";
+
+            // Assuming Ibook.list() returns a list of books
+            var book = Ibook.list().FirstOrDefault(b => b.OBJECTID == objectid);
+
+            if (book == null)
+            {
+                return NotFound(); // Return a 404 Not Found response if the book with the given ID is not found.
+            }
+
+            return Ok(book); // Return a 200 OK response with the book data if found.
+
         }
 
         // POST api/<BookApiController>

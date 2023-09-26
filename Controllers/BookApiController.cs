@@ -25,6 +25,7 @@ namespace DemoLibrary.Controllers
         private readonly IHttpContextAccessor httpContextAccessor;
 
         private readonly IBookLibrary<Book> Ibook;
+      //  private  int cartItemCount = 0;
 
 #pragma warning disable CS0618 // 'IHostingEnvironment' est obsolète : 'This type is obsolete and will be removed in a future version. The recommended alternative is Microsoft.AspNetCore.Hosting.IWebHostEnvironment.'
         public BookApiController(DemoBooksDbContext connectionToDba, IHttpContextAccessor httpContext, IBookLibrary<Book> bookLirary, IBookLibrary<Author> Iauthor, IHostingEnvironment _hosting)
@@ -35,6 +36,7 @@ namespace DemoLibrary.Controllers
             this.Ibook = bookLirary;
             this.Iauthor = Iauthor;
             this.hosting = _hosting;
+          //  this.cartItemCount =cartItemCount;
             this.httpContextAccessor = httpContext;
 
         }
@@ -183,6 +185,7 @@ namespace DemoLibrary.Controllers
 
             Ibook.Edit((int)idBook, BookDba);
 
+
         }
 
         [Authorize]
@@ -197,6 +200,15 @@ namespace DemoLibrary.Controllers
             }
 
         }
+
+        //[Authorize]
+        //[HttpPost("AddBookToCartShopping")]
+        //public IActionResult AddBookToCart()
+        //{
+        //    cartItemCount++;
+
+        //    return Ok(new { cartItemCount });
+        //}
 
     }
 }

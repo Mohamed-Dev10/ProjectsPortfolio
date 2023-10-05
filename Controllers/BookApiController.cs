@@ -1,4 +1,5 @@
 ﻿using DemoLibrary.Models;
+using DemoLibrary.Models.dto;
 using DemoLibrary.Models.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -200,6 +201,43 @@ namespace DemoLibrary.Controllers
             }
 
         }
+
+        [HttpPost("AddFavoritBookForUser")]
+        public IActionResult AddBookToFavoritListUser([FromBody] FavoriteBookRequest requestfavoritBook) {
+
+            try {
+                var user = connectionToDba.users.Find(requestfavoritBook.userid) ;
+                var FavoritBook = connectionToDba.books.Find(requestfavoritBook.bookid);
+
+
+
+                if (user != null && FavoritBook != null)
+                {
+
+                    var UserFavoritBook = new favoritBooks
+                    {
+                        Book = FavoritBook,
+                        User = user
+                    };
+
+                    connectionToDba.favoritBooks.Add(UserFavoritBook);
+                    connectionToDba.SaveChanges();
+                    return Ok();
+                }
+                else {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, ex.Message); // Return a 500 Internal Server Error response for other exceptions
+            }
+
+
+        }
+
+
 
         //[Authorize]
         //[HttpPost("AddBookToCartShopping")]

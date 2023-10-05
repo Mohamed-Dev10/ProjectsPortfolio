@@ -175,6 +175,10 @@ namespace DemoLibrary.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TitleBook = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DescriptionBook = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumberPage = table.Column<int>(type: "int", nullable: false),
+                    NumberDownlaods = table.Column<int>(type: "int", nullable: false),
+                    NumberViews = table.Column<int>(type: "int", nullable: false),
+                    language = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     fileUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     authorOBJECTID = table.Column<int>(type: "int", nullable: true)
@@ -188,6 +192,106 @@ namespace DemoLibrary.Migrations
                         principalTable: "Authors",
                         principalColumn: "OBJECTID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "comments",
+                columns: table => new
+                {
+                    OBJECTID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_comments", x => x.OBJECTID);
+                    table.ForeignKey(
+                        name: "FK_comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_comments_books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "books",
+                        principalColumn: "OBJECTID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DownloadBook",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BookId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DownloadBook", x => new { x.UserId, x.BookId });
+                    table.ForeignKey(
+                        name: "FK_DownloadBook_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DownloadBook_books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "books",
+                        principalColumn: "OBJECTID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "favoritBooks",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BookId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_favoritBooks", x => new { x.UserId, x.BookId });
+                    table.ForeignKey(
+                        name: "FK_favoritBooks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_favoritBooks_books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "books",
+                        principalColumn: "OBJECTID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RatingUserBook",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    RatingNumber = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RatingUserBook", x => new { x.UserId, x.BookId });
+                    table.ForeignKey(
+                        name: "FK_RatingUserBook_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RatingUserBook_books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "books",
+                        principalColumn: "OBJECTID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -233,6 +337,31 @@ namespace DemoLibrary.Migrations
                 name: "IX_books_authorOBJECTID",
                 table: "books",
                 column: "authorOBJECTID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_comments_BookId",
+                table: "comments",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_comments_UserId",
+                table: "comments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DownloadBook_BookId",
+                table: "DownloadBook",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_favoritBooks_BookId",
+                table: "favoritBooks",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RatingUserBook_BookId",
+                table: "RatingUserBook",
+                column: "BookId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -253,13 +382,25 @@ namespace DemoLibrary.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "books");
+                name: "comments");
+
+            migrationBuilder.DropTable(
+                name: "DownloadBook");
+
+            migrationBuilder.DropTable(
+                name: "favoritBooks");
+
+            migrationBuilder.DropTable(
+                name: "RatingUserBook");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "books");
 
             migrationBuilder.DropTable(
                 name: "Authors");

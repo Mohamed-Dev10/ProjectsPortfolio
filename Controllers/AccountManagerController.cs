@@ -77,6 +77,7 @@ namespace DemoLibrary.Controllers
 
             return Ok(new
             {
+                iduser=user.Id,
                 userlogged = user.UserName,
                 tokensessionlogged = token,
                 firstname = user.FirstName,

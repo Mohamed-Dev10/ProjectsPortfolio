@@ -37,6 +37,8 @@ namespace DemoLibrary
 
             services.AddAuthentication(option =>
             {
+
+
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoLibrary.Migrations
 {
     [DbContext(typeof(DemoBooksDbContext))]
-    [Migration("20230809062007_Migrations")]
+    [Migration("20231005130442_Migrations")]
     partial class Migrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,15 @@ namespace DemoLibrary.Migrations
                     b.Property<string>("ImgUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("NumberDownlaods")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberPage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberViews")
+                        .HasColumnType("int");
+
                     b.Property<string>("TitleBook")
                         .HasColumnType("nvarchar(max)");
 
@@ -58,11 +67,87 @@ namespace DemoLibrary.Migrations
                     b.Property<string>("fileUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("language")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("OBJECTID");
 
                     b.HasIndex("authorOBJECTID");
 
                     b.ToTable("books");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.Comments", b =>
+                {
+                    b.Property<int>("OBJECTID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("OBJECTID");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("comments");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.DownloadBook", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("DownloadBook");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.FavoritBook", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("favoritBooks");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.RatingUserBook", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RatingNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("RatingUserBook");
                 });
 
             modelBuilder.Entity("DemoLibrary.Models.User", b =>
@@ -278,6 +363,80 @@ namespace DemoLibrary.Migrations
                     b.Navigation("author");
                 });
 
+            modelBuilder.Entity("DemoLibrary.Models.Comments", b =>
+                {
+                    b.HasOne("DemoLibrary.Models.Book", "Book")
+                        .WithMany("Comments")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DemoLibrary.Models.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.DownloadBook", b =>
+                {
+                    b.HasOne("DemoLibrary.Models.Book", "Book")
+                        .WithMany("DownBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DemoLibrary.Models.User", "User")
+                        .WithMany("UserDowloadBooks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.FavoritBook", b =>
+                {
+                    b.HasOne("DemoLibrary.Models.Book", "Book")
+                        .WithMany("UserBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DemoLibrary.Models.User", "User")
+                        .WithMany("UserFavoritBooks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.RatingUserBook", b =>
+                {
+                    b.HasOne("DemoLibrary.Models.Book", "Book")
+                        .WithMany("RatingBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DemoLibrary.Models.User", "User")
+                        .WithMany("UserRatingBooks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -327,6 +486,28 @@ namespace DemoLibrary.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.Book", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("DownBooks");
+
+                    b.Navigation("RatingBooks");
+
+                    b.Navigation("UserBooks");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.User", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("UserDowloadBooks");
+
+                    b.Navigation("UserFavoritBooks");
+
+                    b.Navigation("UserRatingBooks");
                 });
 #pragma warning restore 612, 618
         }

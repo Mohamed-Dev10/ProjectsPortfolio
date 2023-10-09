@@ -271,28 +271,37 @@ namespace DemoLibrary.Controllers
         }
 
         [HttpGet("GetCommentBook/{idBook}")]
-        public IActionResult DisplayCommentsBook([FromHeader(Name = "idBook")] int? idBook) {
-
+        public IActionResult DisplayCommentsBook(int? idBook)
+        {
             try
             {
-                var commentBook = connectionToDba.comments.Where(bookId=>bookId.BookId==idBook).ToList();
-                if (commentBook.Count()>0)
-                {
+                var comments = connectionToDba.comments.Where(comment => comment.BookId == idBook).ToList();
 
-                    return Ok(commentBook);
+                if (comments != null && comments.Any())
+                {
+                    var commentsBook = comments.Select(comment => new
+                    {
+                        commentid = comment.OBJECTID,
+                        description = comment.Description,
+                        userid = comment.UserId,
+                        usernameresponse = comment.User?.UserName // Use null-conditional operator to avoid null reference
+                    }).ToList();
+
+
+
+                    return Ok(commentsBook);
                 }
-                else {
+                else
+                {
                     return NotFound();
                 }
-
-                
             }
-            catch (Exception ex) {
-                return StatusCode(500,ex.Message);
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
-
-           
         }
+
 
         //[Authorize]
         //[HttpPost("AddBookToCartShopping")]

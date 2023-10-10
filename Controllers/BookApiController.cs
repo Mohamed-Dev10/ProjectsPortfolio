@@ -304,6 +304,36 @@ namespace DemoLibrary.Controllers
         }
 
 
+        [HttpPost("RateBook")]
+        public ActionResult RateBook([FromBody] RatingBookRequest ratingBookRequest) {
+
+            var book = connectionToDba.books.Find(ratingBookRequest.BookId);
+            var user = connectionToDba.users.Find(ratingBookRequest.UserId);
+
+            if (book != null && user!=null) {
+
+                var bookRated = new RatingUserBook
+                {
+                    Book=book,
+                    User=user,
+                    RatingNumber=ratingBookRequest.RatingNumber
+
+
+                };
+
+                connectionToDba.ratingUserBooks.Add(bookRated);
+                connectionToDba.SaveChanges();
+
+                return Ok(book);
+            }
+
+            return Ok();
+        }
+
+
+
+
+
         //[Authorize]
         //[HttpPost("AddBookToCartShopping")]
         //public IActionResult AddBookToCart()

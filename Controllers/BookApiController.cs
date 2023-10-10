@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -275,7 +276,7 @@ namespace DemoLibrary.Controllers
         {
             try
             {
-                var comments = connectionToDba.comments.Where(comment => comment.BookId == idBook).ToList();
+                var comments = connectionToDba.comments.Where(comment => comment.BookId == idBook).Include(comment => comment.User).ToList();
 
                 if (comments != null && comments.Any())
                 {
@@ -284,7 +285,7 @@ namespace DemoLibrary.Controllers
                         commentid = comment.OBJECTID,
                         description = comment.Description,
                         userid = comment.UserId,
-                        usernameresponse = comment.User?.UserName // Use null-conditional operator to avoid null reference
+                        user = comment.User.UserName // Use null-conditional operator to avoid null reference
                     }).ToList();
 
 

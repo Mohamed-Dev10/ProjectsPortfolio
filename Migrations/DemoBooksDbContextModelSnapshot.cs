@@ -115,21 +115,6 @@ namespace DemoLibrary.Migrations
                     b.ToTable("DownloadBook");
                 });
 
-            modelBuilder.Entity("DemoLibrary.Models.FavoritBook", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "BookId");
-
-                    b.HasIndex("BookId");
-
-                    b.ToTable("favoritBooks");
-                });
-
             modelBuilder.Entity("DemoLibrary.Models.RatingUserBook", b =>
                 {
                     b.Property<string>("UserId")
@@ -137,6 +122,11 @@ namespace DemoLibrary.Migrations
 
                     b.Property<int>("BookId")
                         .HasColumnType("int");
+
+                    b.Property<int>("OBJECTID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
                     b.Property<int>("RatingNumber")
                         .HasColumnType("int");
@@ -219,6 +209,21 @@ namespace DemoLibrary.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.favoritBooks", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("favoritBooks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -397,25 +402,6 @@ namespace DemoLibrary.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DemoLibrary.Models.FavoritBook", b =>
-                {
-                    b.HasOne("DemoLibrary.Models.Book", "Book")
-                        .WithMany("UserBooks")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DemoLibrary.Models.User", "User")
-                        .WithMany("UserFavoritBooks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("DemoLibrary.Models.RatingUserBook", b =>
                 {
                     b.HasOne("DemoLibrary.Models.Book", "Book")
@@ -426,6 +412,25 @@ namespace DemoLibrary.Migrations
 
                     b.HasOne("DemoLibrary.Models.User", "User")
                         .WithMany("UserRatingBooks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DemoLibrary.Models.favoritBooks", b =>
+                {
+                    b.HasOne("DemoLibrary.Models.Book", "Book")
+                        .WithMany("UserBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DemoLibrary.Models.User", "User")
+                        .WithMany("UserFavoritBooks")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

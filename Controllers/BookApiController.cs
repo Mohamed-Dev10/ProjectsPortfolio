@@ -290,6 +290,7 @@ namespace DemoLibrary.Controllers
 
 
 
+
                     return Ok(commentsBook);
                 }
                 else
@@ -304,30 +305,62 @@ namespace DemoLibrary.Controllers
         }
 
 
+        [HttpGet("GetRatingBook/{idBook}")]
+        public ActionResult DisplayRatingBookByUser(int? idBook) {
+            try {
+                var bookRatedDba = connectionToDba.ratingUserBooks.Where(d => d.BookId == idBook).FirstOrDefault();
+
+                if (bookRatedDba != null)
+                {
+                    var RatingUserBookResponse = bookRatedDba;
+                    return Ok(RatingUserBookResponse);
+
+                }
+                else {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex) {
+                return StatusCode(500,ex.Message);
+            }
+
+           
+        }
+
         [HttpPost("RateBook")]
         public ActionResult RateBook([FromBody] RatingBookRequest ratingBookRequest) {
 
-            var book = connectionToDba.books.Find(ratingBookRequest.BookId);
-            var user = connectionToDba.users.Find(ratingBookRequest.UserId);
+            try
+            {
+                var book = connectionToDba.books.Find(ratingBookRequest.BookId);
+                var user = connectionToDba.users.Find(ratingBookRequest.UserId);
 
-            if (book != null && user!=null) {
-
-                var bookRated = new RatingUserBook
+                if (book != null && user != null)
                 {
-                    Book=book,
-                    User=user,
-                    RatingNumber=ratingBookRequest.RatingNumber
 
+                    var bookRated = new RatingUserBook
+                    {
+                        Book = book,
+                        User = user,
+                        RatingNumber = ratingBookRequest.RatingNumber
 
-                };
+                    };
 
-                connectionToDba.ratingUserBooks.Add(bookRated);
-                connectionToDba.SaveChanges();
+                    connectionToDba.ratingUserBooks.Add(bookRated);
+                    connectionToDba.SaveChanges();
 
-                return Ok(book);
+                    return Ok(book);
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex) {
+                return StatusCode(500,ex.Message);
             }
 
-            return Ok();
         }
 
 

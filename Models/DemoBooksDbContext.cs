@@ -18,8 +18,8 @@ namespace DemoLibrary.Models
         public DbSet<Comments> comments { get; set; }
 
         public DbSet<favoritBooks> favoritBooks { get; set; }
+        
         public DbSet<RatingUserBook> ratingUserBooks { get; set; }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
